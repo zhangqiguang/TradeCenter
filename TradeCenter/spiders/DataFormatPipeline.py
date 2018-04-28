@@ -15,7 +15,3 @@ class DataFormatPipeline(object):
             path = urlparse(item["file_urls"][0]).path
             path = urllib.parse.unquote(path)
             item["filepath"] = [path]
-        else:
-            item["file_urls"] = ""
-            item["filename"] = ""
-            item["filepath"] = ""

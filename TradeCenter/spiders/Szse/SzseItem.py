@@ -18,3 +18,4 @@ class SzseItem(scrapy.Item):
     filename = scrapy.Field()
     # 文件类型
     filepath = scrapy.Field()
+

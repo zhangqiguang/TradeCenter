@@ -25,22 +25,21 @@ class MySqlStorePipeline(object):
         result = tx.fetchone()
         if result:
             print("Item already stored")
-            # log.msg("Item already stored in db: %s" % item, level=log.DEBUG)
             spider.logger.info("Item already stored in db: %s" % item["rulelink"])
         else:
             tx.execute( \
                 "insert into szse (ruletitle, rulelink, ruledate, content, file_urls, filename, filepath) "
                 "values (%s, %s, %s, %s, %s, %s, %s)",
-                (item['ruletitle'],
-                 item['rulelink'],
-                 item['ruledate'],
-                 item['content'],
-                 item['file_urls'],
-                 item['filename'],
-                 item['filepath']
+                (item.get('ruletitle', ''),
+                 item.get('rulelink', ''),
+                 item.get('ruledate', ''),
+                 item.get('content', ''),
+                 item.get('file_urls', ''),
+                 item.get('filename', ''),
+                 item.get('filepath', ''),
                  )
             )
-            # log.msg("Item stored in db: %s" % item, level=log.DEBUG)
+            spider.logger.info("Item stored in db: %s" % item["rulelink"])
 
     def handle_error(self, e, spider):
         spider.logger.info("Insert into table error: %s" % e)

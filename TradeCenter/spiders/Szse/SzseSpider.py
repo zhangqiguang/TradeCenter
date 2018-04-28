@@ -2,6 +2,8 @@
 import scrapy
 from TradeCenter.spiders.Szse import SzseItem
 import re
+import pandas as pd
+from sqlalchemy import create_engine
 
 class SzseSpider(scrapy.Spider):
     """
@@ -18,6 +20,12 @@ class SzseSpider(scrapy.Spider):
     totalpage = 0
     # 起始url
     start_urls = [url + "index.shtml"]
+
+    exist_urls = None
+
+    def __init__(self):
+        engine = create_engine('mysql+pymysql://root:123456@localhost/spider?charset=utf8')
+        self.exist_urls = pd.read_sql_table(table_name="szse", columns=["rulelink"], con=engine)
 
     def parse(self, response):
         note = response.xpath("//td[@class='pd6']")
@@ -45,6 +53,9 @@ class SzseSpider(scrapy.Spider):
             elif idx_doc > 0:
                 e = idx_doc + 4
             item["rulelink"] = "http://www.szse.cn" + link[b:e]
+            if item["rulelink"] in self.exist_urls.values:
+                continue
+
             if idx_shtml > 0:
                 request = scrapy.Request(url=item["rulelink"], callback=self.parse_content)
                 request.meta['item'] = item
@@ -52,7 +63,6 @@ class SzseSpider(scrapy.Spider):
             if idx_pdf > 0 or idx_doc > 0:
                 item["file_urls"] = [item["rulelink"]]
                 item["filename"] = item["ruletitle"]
-                item["content"] = ""
                 yield item
 
         if self.offset < totalpage - 1:
