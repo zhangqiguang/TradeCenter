@@ -1,5 +1,4 @@
 from twisted.enterprise import adbapi
-import datetime
 import pymysql
 
 
