@@ -24,7 +24,6 @@ class MySqlStorePipeline(object):
         tx.execute("select * from szse where rulelink = %s", (item['rulelink']))
         result = tx.fetchone()
         if result:
-            print("Item already stored")
             spider.logger.info("Item already stored in db: %s" % item["rulelink"])
         else:
             tx.execute( \
