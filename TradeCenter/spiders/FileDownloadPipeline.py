@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from os.path import basename, dirname, join
 import urllib
 
+
 class FileDownloadPipeline(FilesPipeline):
 
     def file_path(self, request, response=None, info=None):
